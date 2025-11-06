@@ -1,0 +1,27 @@
+{
+  "total_examples": 49,
+  "avg_prompt_length": 76.3061224489796,
+  "avg_response_length": 971.1836734693877,
+  "by_source": {
+    "pharma_base": 8,
+    "mushroom_knowledge_db": 20,
+    "crowelm_expert": 50,
+    "mushroom_training_csv": 20,
+    "pharma_training": 8,
+    "hybrid_synthesis": 3,
+    "huggingface_integration": 1,
+    "huggingface_ml_pipeline": 1,
+    "huggingface_tutorial": 1
+  },
+  "by_category": {
+    "general": 8,
+    "cultivation_parameters": 20,
+    "cultivation_expertise": 50,
+    "cultivation_qa": 20,
+    "pharmaceutical_expertise": 8,
+    "mushroom_pharma_integration": 3,
+    "mushroom_pharma_validation": 1,
+    "machine_learning_drug_discovery": 1,
+    "dataset_usage": 1
+  }
+}

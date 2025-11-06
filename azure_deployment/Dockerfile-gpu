@@ -1,0 +1,58 @@
+# CroweLogic-Pharma GPU-Accelerated Deployment
+FROM nvidia/cuda:12.1.0-base-ubuntu22.04
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create application directory
+WORKDIR /app
+
+# Install Ollama
+RUN curl -fsSL https://ollama.com/install.sh | sh
+
+# Copy model configurations
+COPY models/ ./models/
+COPY training_data/ ./training_data/
+
+# Expose ports
+EXPOSE 11434 8000
+
+# GPU environment setup
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
+
+# Entrypoint script for GPU
+RUN echo '#!/bin/bash\n\
+set -e\n\
+echo "Starting Ollama with GPU support..."\n\
+ollama serve &\n\
+sleep 10\n\
+\n\
+# Check GPU availability\n\
+nvidia-smi || echo "Warning: No GPU detected, using CPU"\n\
+\n\
+# Pull base model\n\
+echo "Pulling base model..."\n\
+ollama pull llama3.1:8b\n\
+\n\
+# Create CroweLogic-Pharma model\n\
+echo "Building CroweLogic-Pharma Pro model..."\n\
+ollama create CroweLogic-Pharma:pro -f /app/models/CroweLogicPharmaModelfile-pro\n\
+\n\
+echo "Model ready! GPU acceleration enabled."\n\
+echo "API available at http://localhost:11434"\n\
+\n\
+# Keep container running\n\
+tail -f /dev/null\n\
+' > /app/entrypoint-gpu.sh && chmod +x /app/entrypoint-gpu.sh
+
+ENTRYPOINT ["/app/entrypoint-gpu.sh"]

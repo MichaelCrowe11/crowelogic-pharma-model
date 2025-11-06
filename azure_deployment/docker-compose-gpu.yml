@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  crowelogic-pharma-gpu:
+    build:
+      context: ..
+      dockerfile: azure_deployment/Dockerfile-gpu
+    image: crowelogic-pharma:gpu
+    container_name: crowelogic-pharma-gpu
+
+    # GPU configuration
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+    # Ports
+    ports:
+      - "11434:11434"  # Ollama API
+      - "8000:8000"    # Custom API (if added)
+
+    # Volumes for persistence
+    volumes:
+      - ollama-data:/home/codespace/.ollama
+      - ./models:/app/models:ro
+      - ./training_data:/app/training_data:ro
+
+    # Environment variables
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - CUDA_VISIBLE_DEVICES=0
+      - OLLAMA_NUM_PARALLEL=4
+      - OLLAMA_MODELS=/home/codespace/.ollama/models
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Optional: Add nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: crowelogic-pharma-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - crowelogic-pharma-gpu
+    restart: unless-stopped
+
+volumes:
+  ollama-data:
+    driver: local

@@ -1,0 +1,39 @@
+# Azure Container Instance Configuration for CroweLogic-Pharma
+# Deploy pharmaceutical AI model on Azure
+
+apiVersion: 2019-12-01
+location: eastus
+name: crowelogic-pharma-aci
+properties:
+  containers:
+  - name: crowelogic-pharma
+    properties:
+      image: <your-acr-name>.azurecr.io/crowelogic-pharma:latest
+      resources:
+        requests:
+          cpu: 4.0
+          memoryInGb: 16.0
+      ports:
+      - port: 11434
+        protocol: TCP
+      - port: 8000
+        protocol: TCP
+      environmentVariables:
+      - name: MODEL_NAME
+        value: CroweLogic-Pharma
+      - name: MODEL_VERSION
+        value: latest
+  osType: Linux
+  ipAddress:
+    type: Public
+    dnsNameLabel: crowelogic-pharma
+    ports:
+    - protocol: TCP
+      port: 11434
+    - protocol: TCP
+      port: 8000
+  restartPolicy: Always
+tags:
+  project: CroweLogic-Pharma
+  environment: production
+  cost-center: AI-Research
