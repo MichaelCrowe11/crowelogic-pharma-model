@@ -6,8 +6,12 @@ datasets>=2.14.0
 transformers>=4.30.0
 huggingface_hub>=0.16.0
 
+# Synapse-Lang for quantum computing and scientific computing
+synapse-lang>=2.3.3
+numba>=0.62.0
+
 # Chemistry and molecular analysis
-rdkit-pypi>=2022.9.5
+rdkit>=2025.9.1
 
 # Data processing
 pandas>=2.0.0

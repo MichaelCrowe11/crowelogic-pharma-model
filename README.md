@@ -10,6 +10,8 @@ An advanced AI system specializing in pharmaceutical research, drug discovery, a
 - **Cheminformatics**: Molecular property prediction, compound screening, QSAR modeling
 - **Mycopharmacology**: Mushroom-derived therapeutics, natural product discovery
 - **Computational Drug Discovery**: Molecular docking, virtual screening, binding affinity prediction
+- **🆕 Quantum Computing**: Synapse-Lang integration for quantum chemistry calculations
+- **🆕 AI-Driven Discovery**: Integrated quantum + AI pipeline for drug discovery
 
 ## 🍄 Specialized Knowledge
 
@@ -126,6 +128,13 @@ crowelogic-pharma-model/
    - Mushroom compound therapeutic validation workflows
    - ML pipelines for natural product drug discovery
    - QSAR modeling for medicinal chemistry
+
+4. **Synapse-Lang Quantum Computing**:
+   - Quantum chemistry calculations (molecular orbitals, spectroscopy)
+   - Molecular docking simulations
+   - ADME-Tox property prediction
+   - Integrated AI-driven drug discovery pipeline
+   - See [synapse_pharma_integration/README.md](synapse_pharma_integration/README.md)
 
 ## 🔐 Security & Compliance
 
