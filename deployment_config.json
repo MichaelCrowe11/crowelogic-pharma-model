@@ -1,0 +1,18 @@
+{
+  "subscription_id": "f9fdee0f-1a1b-4fc4-b386-ecce0db8e9a9",
+  "resource_group": "crowelogic-pharma-rg",
+  "location": "eastus",
+  "acr_name": "crowelogicpharmaacr",
+  "aci_name": "crowelogic-pharma-api",
+  "model_name": "CroweLogic-Pharma",
+  "model_version": "120b-v2",
+  "compute": {
+    "cpu": 4,
+    "memory_gb": 16,
+    "gpu_count": 0
+  },
+  "ports": [8000, 11434],
+  "environment_variables": {
+    "OLLAMA_HOST": "0.0.0.0"
+  }
+}

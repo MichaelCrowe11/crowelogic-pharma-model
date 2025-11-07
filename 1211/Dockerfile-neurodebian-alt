@@ -1,0 +1,70 @@
+# CroweLogic-Pharma with NeuroDebian Integration (Alternative base)
+# Uses standard Debian and adds NeuroDebian repositories
+
+FROM debian:bookworm-slim
+
+# Metadata
+LABEL maintainer="michael@crowelogic.com"
+LABEL description="CroweLogic-Pharma pharmaceutical AI with neuroscience tools"
+LABEL version="2.0-neurodebian"
+
+# Add NeuroDebian repository
+RUN apt-get update && apt-get install -y \
+    gnupg \
+    wget \
+    && wget -O- http://neuro.debian.net/lists/bookworm.us-nh.libre | tee /etc/apt/sources.list.d/neurodebian.sources.list \
+    && apt-key adv --recv-keys --keyserver hkps://keyserver.ubuntu.com 0xA5D32F012649A5A9
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    python3 \
+    python3-pip \
+    python3-dev \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Ollama
+RUN curl -fsSL https://ollama.com/install.sh | sh
+
+# Install Python packages for pharmaceutical research
+RUN pip3 install --no-cache-dir --break-system-packages \
+    fastapi \
+    uvicorn \
+    requests \
+    pydantic \
+    numpy \
+    pandas \
+    scipy \
+    rdkit-pypi \
+    biopython \
+    scikit-learn
+
+# Install neuroscience-specific Python packages
+RUN pip3 install --no-cache-dir --break-system-packages \
+    nibabel \
+    nilearn \
+    mne
+
+# Create app directory
+WORKDIR /app
+
+# Copy model files
+COPY models/CroweLogicPharmaModelfile /app/Modelfile
+
+# Copy API server
+COPY azure_deployment/api_server_neurodebian.py /app/api_server.py
+COPY azure_deployment/startup.sh /app/startup.sh
+
+RUN chmod +x /app/startup.sh
+
+# Expose ports
+EXPOSE 11434 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Start services
+CMD ["/app/startup.sh"]

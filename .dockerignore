@@ -1,0 +1,16 @@
+.git
+.gitignore
+*.md
+README.md
+docs/
+tests/
+*.log
+azure_deployment.log
+deployment_config.json
+deploy_to_azure.ps1
+.vscode/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
