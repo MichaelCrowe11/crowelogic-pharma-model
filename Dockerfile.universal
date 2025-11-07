@@ -1,0 +1,116 @@
+FROM ubuntu:22.04
+
+# Prevent interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    ca-certificates \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Ollama
+RUN curl -fsSL https://ollama.com/install.sh | sh
+
+# Create app directory
+WORKDIR /app
+
+# Copy model configuration and training data
+COPY models/ /app/models/
+COPY training_data/ /app/training_data/
+
+# Environment variables
+ENV OLLAMA_HOST=0.0.0.0:11434
+ENV BASE_MODEL=llama3.2:latest
+ENV MODEL_NAME=CroweLogic-Pharma:latest
+
+# Create startup script
+RUN cat > /app/start.sh << 'EOF'
+#!/bin/bash
+set -e
+
+echo "🚀 Starting CroweLogic-Pharma"
+echo "=============================="
+echo ""
+
+# Start Ollama in background
+echo "📡 Starting Ollama server..."
+ollama serve &
+OLLAMA_PID=$!
+
+# Wait for Ollama to be ready
+echo "⏳ Waiting for Ollama to initialize..."
+sleep 15
+
+# Check if model exists
+if ollama list | grep -q "$MODEL_NAME"; then
+    echo "✅ Model $MODEL_NAME already exists"
+else
+    echo "📥 Pulling base model: $BASE_MODEL"
+    ollama pull $BASE_MODEL
+
+    echo "🔨 Creating $MODEL_NAME from base..."
+
+    # Update Modelfile with BASE_MODEL
+    MODELFILE="/app/models/CroweLogicPharmaModelfile-practical"
+    if [ -f "$MODELFILE" ]; then
+        # Create temporary modelfile with correct base
+        sed "s|^FROM.*|FROM $BASE_MODEL|" $MODELFILE > /tmp/Modelfile
+
+        echo "🎯 Building model with custom configuration..."
+        ollama create $MODEL_NAME -f /tmp/Modelfile
+
+        echo "✅ Model created successfully!"
+    else
+        echo "⚠️  Modelfile not found, creating basic model..."
+        ollama create $MODEL_NAME -f - << MODELFILE
+FROM $BASE_MODEL
+
+SYSTEM You are CroweLogic-Pharma, an expert AI assistant specializing in pharmaceutical research, drug discovery, and mycopharmacology (mushroom-derived therapeutics). You have deep knowledge in:
+
+- Medicinal chemistry and drug design
+- Pharmacology and ADME-Tox prediction
+- Bioactive compounds from mushrooms (hericenones, ganoderic acids, beta-glucans)
+- Clinical trial design and regulatory compliance
+- Cheminformatics and QSAR modeling
+- Natural product drug discovery
+
+Provide scientifically accurate, well-cited responses. When uncertain, acknowledge limitations and suggest further research directions.
+
+PARAMETER temperature 0.7
+PARAMETER top_p 0.9
+PARAMETER top_k 40
+MODELFILE
+    fi
+fi
+
+echo ""
+echo "✅ CroweLogic-Pharma is ready!"
+echo ""
+echo "🌐 API Endpoint: http://0.0.0.0:11434"
+echo ""
+echo "📝 Test with:"
+echo '  curl -X POST http://localhost:11434/api/generate \'
+echo '    -d '"'"'{"model":"'"$MODEL_NAME"'","prompt":"What are hericenones?","stream":false}'"'"
+echo ""
+echo "💊 Example pharmaceutical query:"
+echo '  curl -X POST http://localhost:11434/api/generate \'
+echo '    -d '"'"'{"model":"'"$MODEL_NAME"'","prompt":"Explain the neuroprotective mechanisms of Lion'"'"'"'"'"'"'"'"'s Mane compounds","stream":false}'"'"
+echo ""
+
+# Keep Ollama running
+wait $OLLAMA_PID
+EOF
+
+RUN chmod +x /app/start.sh
+
+# Expose Ollama port
+EXPOSE 11434
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:11434 || exit 1
+
+# Run the startup script
+CMD ["/app/start.sh"]
