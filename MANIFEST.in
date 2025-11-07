@@ -1,0 +1,35 @@
+# Include documentation
+include README.md
+include LICENSE
+include DEPLOYMENT.md
+include PROJECT_SUMMARY.md
+
+# Include requirements
+include requirements.txt
+
+# Include model configurations
+recursive-include models *.md
+recursive-include models *Modelfile*
+
+# Include training data
+recursive-include training_data *.jsonl
+
+# Include Azure deployment files
+recursive-include azure_deployment *.py
+recursive-include azure_deployment *.yaml
+recursive-include azure_deployment *.yml
+recursive-include azure_deployment Dockerfile*
+recursive-include azure_deployment *.md
+
+# Include Synapse integration
+recursive-include synapse_pharma_integration *.py
+recursive-include synapse_pharma_integration *.md
+
+# Include scripts
+recursive-include scripts *.py
+
+# Exclude build artifacts
+global-exclude *.pyc
+global-exclude __pycache__
+global-exclude .DS_Store
+global-exclude *.swp

@@ -1,0 +1,223 @@
+Metadata-Version: 2.4
+Name: crowelogic-pharma
+Version: 3.0.0
+Summary: AI-Powered Pharmaceutical Research Platform with Quantum Computing
+Home-page: https://github.com/michaelcrowe11/crowelogic-pharma-model
+Author: Michael Benjamin Crowe
+Author-email: michael@crowelogic.com
+Project-URL: Documentation, https://github.com/michaelcrowe11/crowelogic-pharma-model
+Project-URL: Source, https://github.com/michaelcrowe11/crowelogic-pharma-model
+Project-URL: Tracker, https://github.com/michaelcrowe11/crowelogic-pharma-model/issues
+Keywords: pharmaceutical ai drug-discovery quantum-computing machine-learning chemistry bioinformatics mushrooms mycology
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: Healthcare Industry
+Classifier: Topic :: Scientific/Engineering :: Chemistry
+Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: License :: Other/Proprietary License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: datasets>=2.14.0
+Requires-Dist: transformers>=4.30.0
+Requires-Dist: huggingface_hub>=0.16.0
+Requires-Dist: synapse-lang>=2.3.3
+Requires-Dist: numba>=0.62.0
+Requires-Dist: rdkit>=2025.9.1
+Requires-Dist: pandas>=2.0.0
+Requires-Dist: numpy>=1.24.0
+Requires-Dist: scikit-learn>=1.3.0
+Requires-Dist: torch>=2.0.0
+Requires-Dist: tensorflow>=2.13.0
+Requires-Dist: requests>=2.31.0
+Requires-Dist: aiohttp>=3.8.5
+Requires-Dist: matplotlib>=3.7.0
+Requires-Dist: seaborn>=0.12.0
+Requires-Dist: pillow>=10.0.0
+Requires-Dist: azure-ai-ml>=1.11.0
+Requires-Dist: azure-identity>=1.14.0
+Requires-Dist: azureml-core>=1.52.0
+Requires-Dist: pytest>=7.4.0
+Requires-Dist: black>=23.7.0
+Requires-Dist: flake8>=6.1.0
+Provides-Extra: dev
+Requires-Dist: pytest>=8.3.4; extra == "dev"
+Requires-Dist: pytest-cov>=6.0.0; extra == "dev"
+Requires-Dist: black>=24.10.0; extra == "dev"
+Requires-Dist: flake8>=7.1.1; extra == "dev"
+Requires-Dist: mypy>=1.13.0; extra == "dev"
+Provides-Extra: gpu
+Requires-Dist: cupy-cuda12x>=13.3.0; extra == "gpu"
+Provides-Extra: docs
+Requires-Dist: sphinx>=8.1.3; extra == "docs"
+Requires-Dist: sphinx-rtd-theme>=3.0.2; extra == "docs"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: project-url
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# CroweLogic-Pharma: AI-Powered Pharmaceutical Research Platform
+
+An advanced AI system specializing in pharmaceutical research, drug discovery, and biomedical innovation, with particular expertise in mycopharmacology and mushroom-derived therapeutics.
+
+## 🔬 Core Capabilities
+
+- **Medicinal Chemistry**: Drug design, SAR analysis, lead optimization
+- **Pharmacology**: ADME-Tox prediction, target identification, mechanism of action
+- **Biomedical Research**: Disease pathways, therapeutic targets, clinical trial design
+- **Cheminformatics**: Molecular property prediction, compound screening, QSAR modeling
+- **Mycopharmacology**: Mushroom-derived therapeutics, natural product discovery
+- **Computational Drug Discovery**: Molecular docking, virtual screening, binding affinity prediction
+- **🆕 Quantum Computing**: Synapse-Lang integration for quantum chemistry calculations
+- **🆕 AI-Driven Discovery**: Integrated quantum + AI pipeline for drug discovery
+
+## 🍄 Specialized Knowledge
+
+### Mushroom Bioactive Compounds
+- **Hericenones & Erinacines** (Lion's Mane): NGF stimulation, neuroprotection
+- **Ganoderic Acids** (Reishi): Anti-inflammatory, anticancer, hepatoprotective
+- **Beta-glucans**: Immunomodulation, antitumor activity
+
+### Therapeutic Applications
+- Neurodegenerative diseases (Alzheimer's, Parkinson's, ALS)
+- Oncology and immunotherapy
+- Neuroprotection and cognitive enhancement
+
+## 📊 Model Specifications
+
+- **Base Model**: GPT-OSS 120B
+- **Parameters**: 116.8B
+- **Context Length**: 131,072 tokens
+- **Quantization**: MXFP4
+
+## 🚀 Quick Start
+
+### Local Deployment
+
+```bash
+# 1. Install dependencies
+pip install -r requirements.txt
+
+# 2. Install Ollama
+curl -fsSL https://ollama.com/install.sh | sh
+
+# 3. Generate expanded training data
+python scripts/add_huggingface_data.py
+python scripts/consolidate_training_data.py
+
+# 4. Create the model
+ollama create CroweLogic-Pharma:latest -f models/CroweLogicPharmaModelfile
+
+# 5. Run the model
+ollama run CroweLogic-Pharma:latest
+```
+
+### Azure Deployment
+
+```bash
+# 1. Configure deployment
+python azure_deployment/deploy_azure.py --config
+
+# 2. Deploy to Azure Container Instances
+python azure_deployment/deploy_azure.py --type aci
+
+# 3. Access via endpoint
+curl -X POST http://<your-endpoint>:11434/api/generate \
+  -d '{"model": "CroweLogic-Pharma", "prompt": "Your question"}'
+```
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for complete deployment guide.
+
+## 📁 Repository Structure
+
+```
+crowelogic-pharma-model/
+├── models/                      # Model configurations
+│   ├── CroweLogicPharmaModelfile    # Main Ollama Modelfile
+│   ├── advanced_modelfile           # Advanced configuration
+│   └── quantumchem_modelfile        # Quantum chemistry variant
+├── training_data/               # Training datasets
+│   ├── pharma_base.jsonl            # Base pharmaceutical knowledge
+│   ├── crowelm_expert.jsonl         # Mushroom cultivation expertise
+│   ├── huggingface_training_data.jsonl  # HF dataset integration
+│   ├── chembl_training_data.jsonl   # ChEMBL drug targets
+│   └── crowelogic_pharma_expanded_training.jsonl  # Consolidated dataset
+├── scripts/                     # Build and deployment scripts
+│   ├── build_crowelogic_pharma.py   # Original build script
+│   ├── add_huggingface_data.py      # HuggingFace integration
+│   ├── add_chembl_data.py           # Enhanced ChEMBL integration
+│   └── consolidate_training_data.py # Data consolidation pipeline
+├── azure_deployment/            # Azure deployment files
+│   ├── Dockerfile                   # Container configuration
+│   ├── deploy_azure.py              # Deployment automation
+│   ├── azure-container-instance.yaml # ACI configuration
+│   ├── azure-ml-config.yaml         # Azure ML environment
+│   └── README.md                    # Deployment guide
+├── requirements.txt             # Python dependencies
+├── DEPLOYMENT.md                # Complete deployment guide
+└── README.md                    # This file
+```
+
+## 🎓 Training Data
+
+### Enhanced Dataset (v2.0)
+
+- **Pharmaceutical Domain**: 8 base examples
+- **Mushroom Cultivation**: 90+ expert examples
+- **ChEMBL Drug Targets**: 200+ target examples with bioactivity interpretation
+- **Hugging Face Integrations**: Drug-target pairs, SMILES molecules, protein-ligand complexes
+- **Hybrid Knowledge**: 10+ mushroom-pharma integration examples
+- **Total**: 300+ curated examples
+
+### Data Sources
+
+1. **Hugging Face Datasets**:
+   - `alimotahharynia/approved_drug_target` (1,660 approved drugs, 2,093 targets)
+   - `antoinebcx/smiles-molecules-chembl` (ChEMBL SMILES database)
+   - `SandboxAQ/SAIR` (1M+ protein-ligand complexes)
+   - `microsoft/BiomedParseData` (Biomedical object detection)
+
+2. **ChEMBL Database**:
+   - 17,803+ drug targets with GO terms and PDB structures
+   - Bioactivity data interpretation (IC50, EC50, Ki, Kd)
+   - Structure-activity relationship (SAR) analysis examples
+
+3. **Custom Integration**:
+   - Mushroom compound therapeutic validation workflows
+   - ML pipelines for natural product drug discovery
+   - QSAR modeling for medicinal chemistry
+
+4. **Synapse-Lang Quantum Computing**:
+   - Quantum chemistry calculations (molecular orbitals, spectroscopy)
+   - Molecular docking simulations
+   - ADME-Tox property prediction
+   - Integrated AI-driven drug discovery pipeline
+   - See [synapse_pharma_integration/README.md](synapse_pharma_integration/README.md)
+
+## 🔐 Security & Compliance
+
+- Training data sanitized and validated
+- No patient data or proprietary research
+- All mushroom data from public educational content
+- Pharmaceutical knowledge from published literature
+
+## 📄 License
+
+Private and Confidential - All Rights Reserved
+
+---
+
+**Built with 🍄 for advancing mushroom-derived therapeutics**

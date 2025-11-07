@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crowelogic-pharma-gpu
+  namespace: pharma-ai
+  labels:
+    app: crowelogic-pharma-gpu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crowelogic-pharma-gpu
+  template:
+    metadata:
+      labels:
+        app: crowelogic-pharma-gpu
+    spec:
+      # Target the GPU node pool (update the selector to match your pool labels)
+      nodeSelector:
+        agentpool: gpu
+      tolerations:
+        - key: sku
+          operator: Equal
+          value: gpu
+          effect: NoSchedule
+      containers:
+        - name: crowelogic-pharma-gpu
+          image: crowelogicpharma60881.azurecr.io/crowelogic-pharma-pro-gpu:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "16"
+              memory: "200Gi"
+              nvidia.com/gpu: "1"
+            limits:
+              cpu: "32"
+              memory: "240Gi"
+              nvidia.com/gpu: "1"
+          env:
+            - name: OLLAMA_HOST
+              value: "0.0.0.0:11434"
+            - name: OLLAMA_MAX_LOADED_MODELS
+              value: "1"
+            - name: OLLAMA_NUM_PARALLEL
+              value: "1"
+          ports:
+            - containerPort: 11434
+              name: ollama
+            - containerPort: 8000
+              name: api
+          volumeMounts:
+            - name: ollama-cache
+              mountPath: /root/.ollama
+      volumes:
+        - name: ollama-cache
+          emptyDir:
+            medium: ""
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crowelogic-pharma-gpu
+  namespace: pharma-ai
+  labels:
+    app: crowelogic-pharma-gpu
+spec:
+  type: LoadBalancer
+  selector:
+    app: crowelogic-pharma-gpu
+  ports:
+    - name: ollama
+      port: 11434
+      targetPort: 11434
+    - name: api
+      port: 8000
+      targetPort: 8000

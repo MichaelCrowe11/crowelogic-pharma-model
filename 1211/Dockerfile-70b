@@ -1,0 +1,95 @@
+# CroweLogic-Pharma Pro (70b) Azure Deployment Dockerfile
+# Optimized for high-memory pharmaceutical AI workloads
+
+FROM python:3.10-slim as base
+
+# Set environment variables for 70b model
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    OLLAMA_HOST=0.0.0.0:11434 \
+    OLLAMA_MAX_LOADED_MODELS=1 \
+    OLLAMA_NUM_PARALLEL=1
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    build-essential \
+    htop \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create application directory
+WORKDIR /app
+
+# Copy requirements
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
+
+# Copy application code
+COPY models/ ./models/
+COPY training_data/ ./training_data/
+COPY scripts/ ./scripts/
+
+# Install Ollama
+RUN curl -fsSL https://ollama.com/install.sh | sh
+
+# Expose ports
+EXPOSE 11434 8000
+
+# Create optimized entrypoint for 70b model
+RUN echo '#!/bin/bash\n\
+set -e\n\
+echo "========================================"\n\
+echo "CroweLogic-Pharma Pro (70b) Starting..."\n\
+echo "========================================"\n\
+echo "Resources: 8 CPU, 64GB RAM"\n\
+echo "Model: llama3.1:70b"\n\
+echo ""\n\
+echo "Starting Ollama service..."\n\
+ollama serve &\n\
+OLLAMA_PID=$!\n\
+echo "Ollama PID: $OLLAMA_PID"\n\
+\n\
+# Wait for Ollama to be ready\n\
+echo "Waiting for Ollama to initialize..."\n\
+sleep 10\n\
+\n\
+# Check if model exists, if not pull and create it\n\
+if ! ollama list | grep -q "CroweLogic-Pharma-Pro"; then\n\
+  echo ""\n\
+  echo "Pulling llama3.1:70b base model..."\n\
+  echo "This will take 15-20 minutes (40GB download)"\n\
+  ollama pull llama3.1:70b\n\
+  \n\
+  echo ""\n\
+  echo "Building CroweLogic-Pharma-Pro model..."\n\
+  ollama create CroweLogic-Pharma-Pro:latest -f /app/models/CroweLogicPharmaModelfile-70b\n\
+  \n\
+  echo ""\n\
+  echo "✅ Model ready!"\n\
+else\n\
+  echo ""\n\
+  echo "✅ CroweLogic-Pharma-Pro model already exists"\n\
+fi\n\
+\n\
+echo ""\n\
+echo "========================================"\n\
+echo "CroweLogic-Pharma Pro (70b) Online"\n\
+echo "========================================"\n\
+echo "Endpoint: http://<your-endpoint>:11434"\n\
+echo "Model: CroweLogic-Pharma-Pro:latest"\n\
+echo "Base: llama3.1:70b (40GB, 70B parameters)"\n\
+echo ""\n\
+echo "Ready for pharmaceutical AI queries!"\n\
+echo "========================================"\n\
+\n\
+# Keep container running\n\
+tail -f /dev/null\n\
+' > /app/entrypoint.sh && chmod +x /app/entrypoint.sh
+
+ENTRYPOINT ["/app/entrypoint.sh"]

@@ -1,4 +1,4 @@
-FROM gpt-oss:120b-cloud
+FROM llama3.1:8b
 
 # Optimized parameters for pharmaceutical research
 PARAMETER temperature 0.05

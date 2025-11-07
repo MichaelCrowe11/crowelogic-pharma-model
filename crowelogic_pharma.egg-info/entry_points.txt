@@ -1,0 +1,3 @@
+[console_scripts]
+crowelogic = crowelogic_pharma_cli:cli
+crowelogic-pharma = crowelogic_pharma_cli:cli

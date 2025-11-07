@@ -1,0 +1,32 @@
+{
+  "subscription_id": "366202b8-255e-4d8f-8a95-b43466cacb10",
+  "resource_group": "crowelogic-pharma-rg",
+  "location": "eastus",
+  "acr_name": "crowelogicpharma60881",
+  "aci_name": "crowelogic-pharma-pro-aci",
+  "dns_label": "crowelogic-pharma-pro",
+  "model_name": "CroweLogic-Pharma-Pro",
+  "model_version": "latest",
+  "base_model": "llama3.1:70b",
+  "modelfile": "CroweLogicPharmaModelfile-70b",
+  "compute": {
+    "cpu": 8,
+    "memory_gb": 64,
+    "gpu_count": 0
+  },
+  "ports": {
+    "ollama": 11434,
+    "api": 8000
+  },
+  "environment": {
+    "OLLAMA_HOST": "0.0.0.0:11434",
+    "OLLAMA_MAX_LOADED_MODELS": "1",
+    "OLLAMA_NUM_PARALLEL": "1"
+  },
+  "tags": {
+    "project": "CroweLogic-Pharma",
+    "tier": "pro",
+    "model_size": "70b",
+    "purpose": "pharmaceutical-research"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "subscription_id": "366202b8-255e-4d8f-8a95-b43466cacb10",
+  "resource_group": "crowelogic-pharma-rg",
+  "location": "eastus",
+  "acr_name": "crowelogicpharma60881",
+  "aci_name": "crowelogic-pharma-aci",
+  "model_name": "CroweLogic-Pharma",
+  "model_version": "latest",
+  "compute": {
+    "cpu": 4,
+    "memory_gb": 16,
+    "gpu_count": 0
+  }
+}

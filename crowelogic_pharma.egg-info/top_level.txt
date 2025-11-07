@@ -1,0 +1,2 @@
+crowelogic_pharma_cli
+synapse_pharma_integration
