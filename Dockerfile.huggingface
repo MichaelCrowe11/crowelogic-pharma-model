@@ -1,0 +1,83 @@
+FROM nvidia/cuda:12.2.0-runtime-ubuntu22.04
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    ca-certificates \
+    python3 \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Ollama
+RUN curl -fsSL https://ollama.com/install.sh | sh
+
+# Set working directory
+WORKDIR /app
+
+# Copy application files
+COPY app.py /app/
+COPY requirements_hf.txt /app/
+COPY models/ /app/models/
+COPY training_data/ /app/training_data/
+
+# Install Python dependencies
+RUN pip3 install --no-cache-dir -r requirements_hf.txt
+
+# Environment variables
+ENV OLLAMA_HOST=0.0.0.0:11434
+ENV OLLAMA_URL=http://localhost:11434
+ENV GRADIO_SERVER_NAME=0.0.0.0
+ENV GRADIO_SERVER_PORT=7860
+
+# Expose ports
+EXPOSE 11434 7860
+
+# Startup script
+RUN cat > /app/start.sh << 'EOF'
+#!/bin/bash
+set -e
+
+echo "🚀 Starting CroweLogic-Pharma on Hugging Face"
+echo "=============================================="
+
+# Start Ollama
+echo "📡 Starting Ollama server..."
+ollama serve &
+OLLAMA_PID=$!
+
+# Wait for Ollama
+echo "⏳ Waiting for Ollama to initialize..."
+sleep 15
+
+# Pull base model
+echo "📥 Pulling base model..."
+ollama pull llama3.2:latest
+
+# Create CroweLogic-Pharma model
+echo "🔨 Creating CroweLogic-Pharma model..."
+if [ -f /app/models/CroweLogicPharmaModelfile-practical ]; then
+    ollama create CroweLogic-Pharma:latest -f /app/models/CroweLogicPharmaModelfile-practical
+else
+    # Fallback: create basic model
+    cat > /tmp/Modelfile << 'MODELFILE'
+FROM llama3.2:latest
+
+SYSTEM You are CroweLogic-Pharma, an expert AI assistant specializing in pharmaceutical research, drug discovery, and mycopharmacology. You have deep knowledge in medicinal chemistry, pharmacology, bioactive mushroom compounds, clinical trial design, and natural product drug discovery.
+
+PARAMETER temperature 0.7
+PARAMETER top_p 0.9
+MODELFILE
+    ollama create CroweLogic-Pharma:latest -f /tmp/Modelfile
+fi
+
+echo "✅ Model ready!"
+
+# Start Gradio app
+echo "🎨 Starting Gradio interface..."
+python3 /app/app.py
+EOF
+
+RUN chmod +x /app/start.sh
+
+# Run startup script
+CMD ["/app/start.sh"]
