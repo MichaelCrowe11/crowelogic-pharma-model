@@ -50,8 +50,8 @@ class DataOrchestrator:
         chembl_natural = self.chembl.fetch_natural_products(limit=min(50, self.target_compounds // 6))
         logger.info(f"   Found {len(chembl_natural)} ChEMBL natural product IDs")
 
-        logger.info("3. Fetching drug compounds from PubChem...")
-        pubchem_drugs = self.pubchem.fetch_drug_compounds(limit=min(200, self.target_compounds // 2))
+        logger.info("3. Fetching common drugs from PubChem...")
+        pubchem_drugs = self.pubchem.fetch_common_drugs(limit=min(100, self.target_compounds // 3))
         logger.info(f"   Found {len(pubchem_drugs)} PubChem drug CIDs")
 
         # Fetch detailed data for each compound

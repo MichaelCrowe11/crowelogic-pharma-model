@@ -179,6 +179,44 @@ class PubChemFetcher(BaseFetcher):
             logger.error(f"Similarity search failed: {e}")
         return []
 
+    def fetch_common_drugs(self, limit: int = 100) -> List[str]:
+        """
+        Fetch common pharmaceutical drugs by specific names
+
+        Returns:
+            List of CIDs for common drugs
+        """
+        # List of common pharmaceutical compounds
+        common_drugs = [
+            "aspirin", "ibuprofen", "acetaminophen", "paracetamol",
+            "amoxicillin", "metformin", "atorvastatin", "lisinopril",
+            "levothyroxine", "amlodipine", "metoprolol", "omeprazole",
+            "simvastatin", "losartan", "albuterol", "gabapentin",
+            "hydrochlorothiazide", "sertraline", "furosemide", "montelukast",
+            "escitalopram", "rosuvastatin", "pantoprazole", "warfarin",
+            "clopidogrel", "ciprofloxacin", "tramadol", "prednisone",
+            "fluoxetine", "tamsulosin", "citalopram", "propranolol",
+            "codeine", "morphine", "diazepam", "alprazolam",
+            "lorazepam", "zolpidem", "clonazepam", "oxycodone",
+            "fentanyl", "hydrocodone", "methylphenidate", "dexamethasone",
+            "insulin", "heparin", "warfarin", "enoxaparin",
+            "dopamine", "epinephrine", "norepinephrine", "dobutamine",
+        ]
+
+        cids = []
+        for drug_name in common_drugs[:limit]:
+            try:
+                drug_cids = self.search_by_name(drug_name, limit=1)
+                if drug_cids:
+                    cids.extend(drug_cids)
+                    if len(cids) >= limit:
+                        break
+            except Exception as e:
+                logger.debug(f"Failed to fetch {drug_name}: {e}")
+                continue
+
+        return cids[:limit]
+
     def fetch_drug_compounds(self, limit: int = 1000) -> List[str]:
         """
         Fetch FDA-approved drug compounds
