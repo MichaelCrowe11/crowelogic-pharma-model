@@ -41,13 +41,13 @@ class DataOrchestrator:
         """Fetch compounds from multiple sources"""
         logger.info(f"Fetching up to {self.target_compounds} compounds from multiple sources...")
 
-        # Strategy: AGGRESSIVE multi-source fetching
+        # Strategy: ULTRA-AGGRESSIVE multi-source fetching for 200K+ dataset
         logger.info("1. Fetching approved drugs from ChEMBL...")
-        chembl_drugs = self.chembl.fetch_approved_drugs(limit=min(500, self.target_compounds // 2))
+        chembl_drugs = self.chembl.fetch_approved_drugs(limit=min(1000, self.target_compounds // 2))
         logger.info(f"   Found {len(chembl_drugs)} ChEMBL drug IDs")
 
-        logger.info("2. Fetching natural products from ChEMBL...")
-        chembl_natural = self.chembl.fetch_natural_products(limit=min(300, self.target_compounds // 3))
+        logger.info("2. Fetching natural products from ChEMBL (MASSIVE SCALE)...")
+        chembl_natural = self.chembl.fetch_natural_products(limit=min(1000, self.target_compounds // 2))
         logger.info(f"   Found {len(chembl_natural)} ChEMBL natural product IDs")
 
         logger.info("3. Fetching common drugs from PubChem (200+ drug list)...")
