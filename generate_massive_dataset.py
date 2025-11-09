@@ -34,7 +34,6 @@ except ImportError:
 
 # Import generation
 from example_generation.mass_scale_generator import MassScaleGenerator, GenerationConfig
-from example_generation.template_library import TemplateLibrary
 
 logging.basicConfig(
     level=logging.INFO,
@@ -62,10 +61,11 @@ class MassiveDatasetGenerator:
         if COCONUT_AVAILABLE:
             self.coconut = COCONUTFetcher()
 
-        # Initialize generators
-        logger.info("Initializing example generators...")
-        self.template_lib = TemplateLibrary()
-        self.generator = MassScaleGenerator(GenerationConfig())
+        # Initialize generator
+        logger.info("Initializing example generator...")
+        config = GenerationConfig()
+        config.target_examples = target_examples if 'target_examples' in locals() else 10000000
+        self.generator = MassScaleGenerator(config)
 
         # Statistics
         self.stats = {
@@ -190,7 +190,6 @@ class MassiveDatasetGenerator:
     def generate_examples_from_compounds(
         self,
         compounds: List[Dict],
-        examples_per_compound: int = 100,
         total_target: int = 10000000
     ) -> List[Dict]:
         """
@@ -198,61 +197,49 @@ class MassiveDatasetGenerator:
 
         Args:
             compounds: List of compound dictionaries
-            examples_per_compound: Target examples per compound (avg)
             total_target: Total examples target
 
         Returns:
-            List of training examples
+            List of training examples (as dicts, not Example objects)
         """
         logger.info("\n" + "=" * 70)
         logger.info(f"GENERATING EXAMPLES: Target {total_target:,} examples")
         logger.info("=" * 70)
 
         all_examples = []
-        templates = self.template_lib.get_all_templates()
 
-        logger.info(f"\nUsing {len(templates)} templates across all categories")
         logger.info(f"Processing {len(compounds)} compounds...")
 
-        # Calculate examples per compound to reach target
-        if len(compounds) > 0:
-            target_per_compound = min(examples_per_compound, total_target // len(compounds))
-        else:
-            target_per_compound = examples_per_compound
+        # Generate examples using MassScaleGenerator
+        for compound in tqdm(compounds, desc="Generating examples"):
+            # Use generator's _generate_for_compound method
+            example_objects = self.generator._generate_for_compound(compound)
 
-        logger.info(f"Target: ~{target_per_compound} examples per compound")
-
-        # Generate in batches
-        batch_size = 1000
-        for i in tqdm(range(0, len(compounds), batch_size), desc="Generating examples"):
-            batch = compounds[i:i + batch_size]
-
-            for compound in batch:
-                # Generate examples for this compound
-                examples = self.generator.generate_examples_for_compound(
-                    compound_data=compound,
-                    all_templates=templates,
-                    num_examples=target_per_compound
-                )
-
-                all_examples.extend(examples)
+            # Convert Example objects to dicts
+            for example_obj in example_objects:
+                example_dict = {
+                    'instruction': example_obj.instruction,
+                    'response': example_obj.response,
+                    'metadata': {
+                        'category': example_obj.category,
+                        'source_compound': example_obj.source_compound,
+                        'difficulty': example_obj.difficulty,
+                        'tags': example_obj.tags,
+                    }
+                }
+                all_examples.append(example_dict)
 
                 # Track categories
-                for example in examples:
-                    category = example.get('metadata', {}).get('category', 'unknown')
-                    self.stats['categories'][category] = self.stats['categories'].get(category, 0) + 1
+                self.stats['categories'][example_obj.category] = self.stats['categories'].get(example_obj.category, 0) + 1
 
-                # Progress update
-                if len(all_examples) >= total_target:
-                    logger.info(f"\n✓ Reached target of {total_target:,} examples!")
-                    break
-
-            # Save intermediate results every batch
-            if i % (batch_size * 10) == 0 and all_examples:
-                self._save_intermediate(all_examples)
-
+            # Check if we've reached target
             if len(all_examples) >= total_target:
+                logger.info(f"\n✓ Reached target of {total_target:,} examples!")
                 break
+
+            # Save intermediate results periodically
+            if len(all_examples) % 10000 == 0 and len(all_examples) > 0:
+                self._save_intermediate(all_examples)
 
         logger.info(f"\n✓ Generated {len(all_examples):,} total examples")
         logger.info(f"  Category distribution: {self.stats['categories']}")

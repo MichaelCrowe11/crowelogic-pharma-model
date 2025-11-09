@@ -11,6 +11,8 @@ import logging
 from datetime import datetime
 import time
 
+from .routers import compounds
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -38,6 +40,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include routers
+app.include_router(compounds.router, prefix="/api/v1", tags=["Compounds"])
 
 
 @app.get("/")
