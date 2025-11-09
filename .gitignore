@@ -1,0 +1,82 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+ENV/
+env/
+mistral_pharma_training/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Model files (too large for git)
+model/*.bin
+model/*.safetensors
+*.gguf
+*.ggml
+
+# Large datasets (use Git LFS or host separately)
+datasets/*.jsonl
+datasets/*.json
+*.tar.gz
+*.zip
+
+# Training outputs
+checkpoints/
+runs/
+wandb/
+outputs/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+
+# Cache
+.cache/
+*.cache
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+*~
