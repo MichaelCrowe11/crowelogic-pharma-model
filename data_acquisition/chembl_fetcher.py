@@ -176,6 +176,12 @@ class ChEMBLFetcher(BaseFetcher):
     def _extract_drug_data(self, molecule: Dict) -> Optional[Dict]:
         """Extract drug-specific data if applicable"""
         max_phase = molecule.get('max_phase', 0)
+        # Convert to int if string
+        try:
+            max_phase = int(max_phase) if max_phase is not None else 0
+        except (ValueError, TypeError):
+            max_phase = 0
+
         if max_phase > 0:
             return {
                 'max_phase': max_phase,

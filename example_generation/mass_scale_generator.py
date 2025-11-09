@@ -260,6 +260,35 @@ class TemplateLibrary:
         """ML pipeline templates"""
         return []
 
+    def _has_field(self, compound_data: Dict, field: str) -> bool:
+        """Check if a field is available in compound data (handles nested properties)"""
+        # Check top level
+        if field in compound_data:
+            return True
+
+        # Check properties dict (for fields like molecular_formula, molecular_weight, etc.)
+        props = compound_data.get('properties', {})
+        field_mappings = {
+            'molecular_formula': 'molecular_formula',
+            'molecular_weight': 'molecular_weight',
+            'smiles': 'canonical_smiles',
+            'logp': 'logp',
+            'tpsa': 'tpsa',
+            'h_donors': 'h_bond_donors',
+            'h_acceptors': 'h_bond_acceptors',
+            'rotatable_bonds': 'rotatable_bonds',
+        }
+
+        if field in field_mappings and props.get(field_mappings[field]) is not None:
+            return True
+
+        # Check metadata
+        metadata = compound_data.get('metadata', {})
+        if field in metadata:
+            return True
+
+        return False
+
     def get_templates_for_compound(self, compound_data: Dict) -> List[Dict]:
         """Select appropriate templates based on compound properties"""
         available_templates = []
@@ -268,11 +297,11 @@ class TemplateLibrary:
             for template in templates:
                 # Check if required fields are available
                 if 'requires' in template:
-                    if all(field in compound_data for field in template['requires']):
+                    if all(self._has_field(compound_data, field) for field in template['requires']):
                         available_templates.append({**template, 'category': category})
 
                 # Check if template applies to compound type
-                if 'applies_to' in template:
+                elif 'applies_to' in template:
                     compound_type = compound_data.get('type', '')
                     if compound_type in template['applies_to']:
                         available_templates.append({**template, 'category': category})
@@ -349,10 +378,10 @@ class MassScaleGenerator:
         templates = self.template_library.get_templates_for_compound(compound)
 
         # Determine how many examples to generate
-        num_examples = random.randint(
-            self.config.examples_per_compound_min,
-            min(self.config.examples_per_compound_max, len(templates))
-        )
+        # Ensure max is always >= min
+        max_examples = min(self.config.examples_per_compound_max, len(templates))
+        min_examples = min(self.config.examples_per_compound_min, max_examples)
+        num_examples = random.randint(min_examples, max_examples)
 
         # Select diverse templates
         selected = random.sample(templates, min(num_examples, len(templates)))
