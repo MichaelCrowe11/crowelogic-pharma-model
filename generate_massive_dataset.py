@@ -33,7 +33,7 @@ except ImportError:
     logging.warning("COCONUT fetcher not available")
 
 # Import generation
-from example_generation.mass_scale_generator import MassScaleGenerator, GeneratorConfig
+from example_generation.mass_scale_generator import MassScaleGenerator, GenerationConfig
 from example_generation.template_library import TemplateLibrary
 
 logging.basicConfig(
@@ -65,7 +65,7 @@ class MassiveDatasetGenerator:
         # Initialize generators
         logger.info("Initializing example generators...")
         self.template_lib = TemplateLibrary()
-        self.generator = MassScaleGenerator(GeneratorConfig())
+        self.generator = MassScaleGenerator(GenerationConfig())
 
         # Statistics
         self.stats = {
@@ -101,7 +101,7 @@ class MassiveDatasetGenerator:
             logger.info(f"   Found {len(approved_ids)} approved drugs")
 
             for chembl_id in tqdm(approved_ids, desc="Fetching approved drug details"):
-                compound = self.chembl.fetch_compound_details(chembl_id)
+                compound = self.chembl.fetch_compound(chembl_id)
                 if compound:
                     normalized = self._normalize_chembl_data(compound)
                     if normalized:
@@ -114,51 +114,40 @@ class MassiveDatasetGenerator:
         except Exception as e:
             logger.error(f"Error fetching approved drugs: {e}")
 
-        # 2. ChEMBL Natural Products (50K target)
+        # 2. ChEMBL Natural Products (if needed - to be implemented)
         if len(compounds) < target:
-            logger.info(f"\n2. Fetching ChEMBL natural products...")
+            logger.info(f"\n2. Natural products: Fetching additional compounds...")
             logger.info(f"   Current total: {len(compounds)}, need {target - len(compounds)} more")
 
             try:
-                natural_ids = self.chembl.fetch_natural_products_all(max_total=50000)
-                logger.info(f"   Found {len(natural_ids)} natural products")
+                # Use existing fetch_natural_products method with pagination
+                batch_size = 100
+                offset = 0
+                remaining = target - len(compounds)
 
-                for chembl_id in tqdm(natural_ids[:target - len(compounds)], desc="Fetching natural products"):
-                    compound = self.chembl.fetch_compound_details(chembl_id)
-                    if compound:
-                        normalized = self._normalize_chembl_data(compound)
-                        if normalized:
-                            compounds.append(normalized)
-                            self.stats['sources']['chembl_natural'] = self.stats['sources'].get('chembl_natural', 0) + 1
+                while len(compounds) < target:
+                    natural_ids = self.chembl.fetch_natural_products(limit=batch_size, offset=offset)
+                    if not natural_ids:
+                        break
+
+                    for chembl_id in tqdm(natural_ids, desc=f"Fetching natural products (offset {offset})"):
+                        compound = self.chembl.fetch_compound(chembl_id)
+                        if compound:
+                            normalized = self._normalize_chembl_data(compound)
+                            if normalized:
+                                compounds.append(normalized)
+                                self.stats['sources']['chembl_natural'] = self.stats['sources'].get('chembl_natural', 0) + 1
+
+                        if len(compounds) >= target:
+                            break
+
+                    offset += batch_size
 
                     if len(compounds) >= target:
                         break
 
             except Exception as e:
                 logger.error(f"Error fetching natural products: {e}")
-
-        # 3. ChEMBL Bioactive (remaining to 100K)
-        if len(compounds) < target:
-            logger.info(f"\n3. Fetching ChEMBL bioactive compounds...")
-            logger.info(f"   Current total: {len(compounds)}, need {target - len(compounds)} more")
-
-            try:
-                bioactive_ids = self.chembl.fetch_bioactive_all(max_total=target - len(compounds))
-                logger.info(f"   Found {len(bioactive_ids)} bioactive compounds")
-
-                for chembl_id in tqdm(bioactive_ids, desc="Fetching bioactive compounds"):
-                    compound = self.chembl.fetch_compound_details(chembl_id)
-                    if compound:
-                        normalized = self._normalize_chembl_data(compound)
-                        if normalized:
-                            compounds.append(normalized)
-                            self.stats['sources']['chembl_bioactive'] = self.stats['sources'].get('chembl_bioactive', 0) + 1
-
-                    if len(compounds) >= target:
-                        break
-
-            except Exception as e:
-                logger.error(f"Error fetching bioactive compounds: {e}")
 
         logger.info(f"\n✓ Phase 1 Complete: Fetched {len(compounds)} compounds")
         logger.info(f"  Source distribution: {self.stats['sources']}")
