@@ -31,23 +31,30 @@ class DataOrchestrator:
     Orchestrate multi-source data fetching and example generation
     """
 
-    def __init__(self, target_compounds: int = 500):
+    def __init__(self, target_compounds: int = 500, offset: int = 0):
         self.target_compounds = target_compounds
+        self.offset = offset
         self.pubchem = PubChemFetcher()
         self.chembl = ChEMBLFetcher()
         self.compounds = []
 
     def fetch_compounds(self):
         """Fetch compounds from multiple sources"""
-        logger.info(f"Fetching up to {self.target_compounds} compounds from multiple sources...")
+        logger.info(f"Fetching up to {self.target_compounds} compounds from multiple sources (offset={self.offset})...")
 
         # Strategy: ULTRA-AGGRESSIVE multi-source fetching for 200K+ dataset
         logger.info("1. Fetching approved drugs from ChEMBL...")
-        chembl_drugs = self.chembl.fetch_approved_drugs(limit=min(1000, self.target_compounds // 2))
+        chembl_drugs = self.chembl.fetch_approved_drugs(
+            limit=min(1000, self.target_compounds // 2),
+            offset=self.offset
+        )
         logger.info(f"   Found {len(chembl_drugs)} ChEMBL drug IDs")
 
         logger.info("2. Fetching natural products from ChEMBL (MASSIVE SCALE)...")
-        chembl_natural = self.chembl.fetch_natural_products(limit=min(1000, self.target_compounds // 2))
+        chembl_natural = self.chembl.fetch_natural_products(
+            limit=min(1000, self.target_compounds // 2),
+            offset=self.offset
+        )
         logger.info(f"   Found {len(chembl_natural)} ChEMBL natural product IDs")
 
         logger.info("3. Fetching common drugs from PubChem (200+ drug list)...")

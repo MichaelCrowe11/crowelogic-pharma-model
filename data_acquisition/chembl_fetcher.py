@@ -248,12 +248,13 @@ class ChEMBLFetcher(BaseFetcher):
             logger.error(f"Similarity search failed: {e}")
         return []
 
-    def fetch_approved_drugs(self, limit: int = 100) -> List[str]:
+    def fetch_approved_drugs(self, limit: int = 100, offset: int = 0) -> List[str]:
         """
         Fetch FDA/EMA approved drugs (Phase 4)
 
         Args:
             limit: Maximum number of compounds
+            offset: Offset for pagination (default 0)
 
         Returns:
             List of ChEMBL IDs for approved drugs
@@ -262,6 +263,7 @@ class ChEMBLFetcher(BaseFetcher):
         params = {
             'max_phase': 4,  # Approved drugs
             'limit': limit,
+            'offset': offset,
         }
 
         try:
@@ -302,12 +304,13 @@ class ChEMBLFetcher(BaseFetcher):
             logger.error(f"Failed to fetch compounds for target {target_chembl_id}: {e}")
         return []
 
-    def fetch_natural_products(self, limit: int = 100) -> List[str]:
+    def fetch_natural_products(self, limit: int = 100, offset: int = 0) -> List[str]:
         """
         Fetch natural products
 
         Args:
             limit: Maximum number of compounds
+            offset: Offset for pagination (default 0)
 
         Returns:
             List of ChEMBL IDs for natural products
@@ -316,6 +319,7 @@ class ChEMBLFetcher(BaseFetcher):
         params = {
             'natural_product': 1,  # Natural products flag
             'limit': limit,
+            'offset': offset,
         }
 
         try:
