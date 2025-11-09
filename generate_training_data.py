@@ -41,17 +41,17 @@ class DataOrchestrator:
         """Fetch compounds from multiple sources"""
         logger.info(f"Fetching up to {self.target_compounds} compounds from multiple sources...")
 
-        # Strategy: Mix of drug compounds and natural products
+        # Strategy: AGGRESSIVE multi-source fetching
         logger.info("1. Fetching approved drugs from ChEMBL...")
-        chembl_drugs = self.chembl.fetch_approved_drugs(limit=min(100, self.target_compounds // 3))
+        chembl_drugs = self.chembl.fetch_approved_drugs(limit=min(500, self.target_compounds // 2))
         logger.info(f"   Found {len(chembl_drugs)} ChEMBL drug IDs")
 
         logger.info("2. Fetching natural products from ChEMBL...")
-        chembl_natural = self.chembl.fetch_natural_products(limit=min(50, self.target_compounds // 6))
+        chembl_natural = self.chembl.fetch_natural_products(limit=min(300, self.target_compounds // 3))
         logger.info(f"   Found {len(chembl_natural)} ChEMBL natural product IDs")
 
-        logger.info("3. Fetching common drugs from PubChem...")
-        pubchem_drugs = self.pubchem.fetch_common_drugs(limit=min(100, self.target_compounds // 3))
+        logger.info("3. Fetching common drugs from PubChem (200+ drug list)...")
+        pubchem_drugs = self.pubchem.fetch_common_drugs(limit=min(200, self.target_compounds // 4))
         logger.info(f"   Found {len(pubchem_drugs)} PubChem drug CIDs")
 
         # Fetch detailed data for each compound

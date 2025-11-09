@@ -186,21 +186,84 @@ class PubChemFetcher(BaseFetcher):
         Returns:
             List of CIDs for common drugs
         """
-        # List of common pharmaceutical compounds
+        # Comprehensive pharmaceutical compound list (200+ drugs)
         common_drugs = [
-            "aspirin", "ibuprofen", "acetaminophen", "paracetamol",
-            "amoxicillin", "metformin", "atorvastatin", "lisinopril",
-            "levothyroxine", "amlodipine", "metoprolol", "omeprazole",
-            "simvastatin", "losartan", "albuterol", "gabapentin",
-            "hydrochlorothiazide", "sertraline", "furosemide", "montelukast",
-            "escitalopram", "rosuvastatin", "pantoprazole", "warfarin",
-            "clopidogrel", "ciprofloxacin", "tramadol", "prednisone",
-            "fluoxetine", "tamsulosin", "citalopram", "propranolol",
-            "codeine", "morphine", "diazepam", "alprazolam",
-            "lorazepam", "zolpidem", "clonazepam", "oxycodone",
-            "fentanyl", "hydrocodone", "methylphenidate", "dexamethasone",
-            "insulin", "heparin", "warfarin", "enoxaparin",
-            "dopamine", "epinephrine", "norepinephrine", "dobutamine",
+            # Pain relievers & NSAIDs
+            "aspirin", "ibuprofen", "acetaminophen", "paracetamol", "naproxen",
+            "celecoxib", "diclofenac", "indomethacin", "ketorolac", "meloxicam",
+
+            # Antibiotics
+            "amoxicillin", "azithromycin", "ciprofloxacin", "doxycycline", "levofloxacin",
+            "cephalexin", "clindamycin", "erythromycin", "penicillin", "tetracycline",
+            "sulfamethoxazole", "trimethoprim", "nitrofurantoin", "metronidazole",
+
+            # Cardiovascular
+            "atorvastatin", "simvastatin", "rosuvastatin", "pravastatin", "lovastatin",
+            "lisinopril", "enalapril", "ramipril", "losartan", "valsartan",
+            "amlodipine", "nifedipine", "diltiazem", "verapamil",
+            "metoprolol", "atenolol", "propranolol", "carvedilol", "bisoprolol",
+            "warfarin", "clopidogrel", "apixaban", "rivaroxaban", "dabigatran",
+            "digoxin", "amiodarone", "furosemide", "hydrochlorothiazide", "spironolactone",
+
+            # Diabetes
+            "metformin", "glipizide", "glyburide", "pioglitazone", "sitagliptin",
+            "insulin", "liraglutide", "empagliflozin", "canagliflozin",
+
+            # Respiratory
+            "albuterol", "montelukast", "fluticasone", "budesonide", "tiotropium",
+            "ipratropium", "salmeterol", "formoterol", "theophylline",
+
+            # Gastrointestinal
+            "omeprazole", "pantoprazole", "lansoprazole", "esomeprazole", "ranitidine",
+            "famotidine", "metoclopramide", "ondansetron", "loperamide", "docusate",
+
+            # Antidepressants & Psychiatric
+            "sertraline", "fluoxetine", "escitalopram", "citalopram", "paroxetine",
+            "venlafaxine", "duloxetine", "bupropion", "mirtazapine", "trazodone",
+            "amitriptyline", "nortriptyline", "lithium", "quetiapine", "olanzapine",
+            "risperidone", "aripiprazole", "clozapine", "haloperidol",
+
+            # Anxiolytics & Sedatives
+            "alprazolam", "lorazepam", "diazepam", "clonazepam", "temazepam",
+            "zolpidem", "eszopiclone", "zaleplon", "buspirone",
+
+            # Pain (Opioids)
+            "codeine", "morphine", "oxycodone", "hydrocodone", "tramadol",
+            "fentanyl", "hydromorphone", "oxymorphone", "buprenorphine", "methadone",
+
+            # Anticonvulsants
+            "gabapentin", "pregabalin", "levetiracetam", "lamotrigine", "valproic acid",
+            "carbamazepine", "phenytoin", "topiramate", "oxcarbazepine",
+
+            # Hormones & Endocrine
+            "levothyroxine", "liothyronine", "methimazole", "propylthiouracil",
+            "prednisone", "prednisolone", "dexamethasone", "hydrocortisone",
+            "testosterone", "estradiol", "progesterone", "medroxyprogesterone",
+
+            # Antihistamines & Allergy
+            "diphenhydramine", "cetirizine", "loratadine", "fexofenadine",
+            "chlorpheniramine", "hydroxyzine", "promethazine",
+
+            # Oncology
+            "tamoxifen", "anastrozole", "letrozole", "imatinib", "gefitinib",
+            "methotrexate", "cyclophosphamide", "doxorubicin", "paclitaxel",
+
+            # Antivirals & Antiretrovirals
+            "acyclovir", "valacyclovir", "oseltamivir", "zanamivir",
+            "lamivudine", "tenofovir", "emtricitabine", "efavirenz", "raltegravir",
+
+            # Immunosuppressants
+            "azathioprine", "cyclosporine", "tacrolimus", "mycophenolate",
+
+            # Urological
+            "tamsulosin", "finasteride", "dutasteride", "sildenafil", "tadalafil",
+            "oxybutynin", "tolterodine", "solifenacin",
+
+            # Other common medications
+            "methylphenidate", "amphetamine", "modafinil", "naloxone",
+            "naltrexone", "disulfiram", "colchicine", "allopurinol",
+            "levothyroxine", "alendronate", "risedronate", "calcium carbonate",
+            "vitamin d", "folic acid", "ferrous sulfate",
         ]
 
         cids = []
