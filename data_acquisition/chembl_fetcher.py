@@ -274,6 +274,42 @@ class ChEMBLFetcher(BaseFetcher):
             logger.error(f"Failed to fetch approved drugs: {e}")
         return []
 
+    def fetch_approved_drugs_all(self, max_total: int = 14000) -> List[str]:
+        """
+        Fetch ALL approved drugs using pagination
+
+        ChEMBL has ~14,000 approved drugs total.
+        Uses pagination to fetch them all.
+
+        Args:
+            max_total: Maximum total to fetch (default 14,000)
+
+        Returns:
+            List of all ChEMBL IDs for approved drugs
+        """
+        all_ids = []
+        batch_size = 1000  # ChEMBL API limit per request
+        offset = 0
+
+        logger.info(f"Fetching up to {max_total} approved drugs from ChEMBL...")
+
+        while len(all_ids) < max_total:
+            batch = self.fetch_approved_drugs(limit=batch_size, offset=offset)
+
+            if not batch:
+                break  # No more results
+
+            all_ids.extend(batch)
+            offset += batch_size
+
+            logger.info(f"  Fetched {len(all_ids)} approved drugs so far...")
+
+            if len(batch) < batch_size:
+                break  # Last batch
+
+        logger.info(f"✓ Total approved drugs fetched: {len(all_ids)}")
+        return all_ids[:max_total]
+
     def fetch_by_target(self, target_chembl_id: str, limit: int = 100) -> List[str]:
         """
         Fetch compounds by target protein

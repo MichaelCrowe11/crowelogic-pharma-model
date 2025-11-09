@@ -48,24 +48,26 @@ echo "🚀 LAUNCHING PHASE 2 RUNS"
 echo "═══════════════════════════════════════════════════════════════════"
 echo ""
 
-# Run 4: 10K compounds → 50K examples
-echo "📊 Run 4: 10,000 compounds → 50,000 examples"
+# Run 4: 10K compounds → 50K examples (offset 2000)
+echo "📊 Run 4: 10,000 compounds → 50,000 examples (offset 2000)"
 nohup python3 generate_training_data.py --compounds 10000 --examples 50000 \
-  --output datasets/phase_2_batch_4_50k.jsonl > logs/phase_2_batch_4_50k.log 2>&1 &
+  --offset 2000 --output datasets/phase_2_batch_4_50k.jsonl > logs/phase_2_batch_4_50k.log 2>&1 &
 PID4=$!
 echo "   PID: $PID4"
 echo "   Log: logs/phase_2_batch_4_50k.log"
 echo "   Output: datasets/phase_2_batch_4_50k.jsonl"
+echo "   Offset: 2000 (fetches compounds 2000-12000)"
 echo ""
 
-# Run 5: 10K compounds → 50K examples
-echo "📊 Run 5: 10,000 compounds → 50,000 examples"
+# Run 5: 10K compounds → 50K examples (offset 12000)
+echo "📊 Run 5: 10,000 compounds → 50,000 examples (offset 12000)"
 nohup python3 generate_training_data.py --compounds 10000 --examples 50000 \
-  --output datasets/phase_2_batch_5_50k.jsonl > logs/phase_2_batch_5_50k.log 2>&1 &
+  --offset 12000 --output datasets/phase_2_batch_5_50k.jsonl > logs/phase_2_batch_5_50k.log 2>&1 &
 PID5=$!
 echo "   PID: $PID5"
 echo "   Log: logs/phase_2_batch_5_50k.log"
 echo "   Output: datasets/phase_2_batch_5_50k.jsonl"
+echo "   Offset: 12000 (fetches compounds 12000-22000)"
 echo ""
 
 echo "═══════════════════════════════════════════════════════════════════"

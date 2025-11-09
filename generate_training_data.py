@@ -176,16 +176,18 @@ def main():
     parser.add_argument('--compounds', type=int, default=500, help='Number of compounds to fetch')
     parser.add_argument('--examples', type=int, default=5000, help='Target number of examples')
     parser.add_argument('--output', type=str, default='datasets/multi_source_dataset.jsonl', help='Output file')
+    parser.add_argument('--offset', type=int, default=0, help='Offset for compound fetching (for parallel runs)')
     args = parser.parse_args()
 
     print("="*70)
     print("Multi-Source Training Data Generation")
     print("="*70)
     print(f"\nTarget: {args.compounds} compounds → {args.examples} examples")
+    print(f"Offset: {args.offset} (for fetching unique compounds)")
     print(f"Output: {args.output}\n")
 
     # 1. Fetch compounds
-    orchestrator = DataOrchestrator(target_compounds=args.compounds)
+    orchestrator = DataOrchestrator(target_compounds=args.compounds, offset=args.offset)
     compounds = orchestrator.fetch_compounds()
 
     if not compounds:
