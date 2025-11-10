@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # Test multiple batches locally with Docker Compose
+  batch-0:
+    build: .
+    environment:
+      - BATCH_ID=0
+      - BATCH_SIZE=100
+    volumes:
+      - ./generated_data:/app/generated_data
+      - ./cache:/app/cache
+      - ./logs:/app/logs
+
+  batch-1:
+    build: .
+    environment:
+      - BATCH_ID=1
+      - BATCH_SIZE=100
+    volumes:
+      - ./generated_data:/app/generated_data
+      - ./cache:/app/cache
+      - ./logs:/app/logs
+
+  batch-2:
+    build: .
+    environment:
+      - BATCH_ID=2
+      - BATCH_SIZE=100
+    volumes:
+      - ./generated_data:/app/generated_data
+      - ./cache:/app/cache
+      - ./logs:/app/logs
+
+  batch-3:
+    build: .
+    environment:
+      - BATCH_ID=3
+      - BATCH_SIZE=100
+    volumes:
+      - ./generated_data:/app/generated_data
+      - ./cache:/app/cache
+      - ./logs:/app/logs
+
+  batch-4:
+    build: .
+    environment:
+      - BATCH_ID=4
+      - BATCH_SIZE=100
+    volumes:
+      - ./generated_data:/app/generated_data
+      - ./cache:/app/cache
+      - ./logs:/app/logs
+
+  # Combiner service - waits for batches to complete then combines
+  combiner:
+    build: .
+    command: >
+      sh -c "echo 'Waiting for batches to complete...' &&
+             sleep 300 &&
+             python combine_batches.py --input-dir generated_data/batches --output combined_dataset.jsonl --split"
+    volumes:
+      - ./generated_data:/app/generated_data
+      - ./cache:/app/cache
+      - ./logs:/app/logs
+    depends_on:
+      - batch-0
+      - batch-1
+      - batch-2
+      - batch-3
+      - batch-4
