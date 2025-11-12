@@ -1,0 +1,26 @@
+{
+  "version": "1.0-crowelogic",
+  "genesis_date": "2025-11-12",
+  "curation_date": "2025-11-12T11:11:45.924128",
+  "total_examples": 1000,
+  "tier_distribution": {
+    "GOLD": 757,
+    "SILVER": 243,
+    "BRONZE": 0,
+    "TRAINING": 0
+  },
+  "unique_compounds": 634,
+  "unique_templates": 15,
+  "tier_files": {
+    "GOLD": "crowelogic_curated/crowelogic_gold.jsonl",
+    "SILVER": "crowelogic_curated/crowelogic_silver.jsonl",
+    "BRONZE": "crowelogic_curated/crowelogic_bronze.jsonl",
+    "TRAINING": "crowelogic_curated/crowelogic_training.jsonl"
+  },
+  "score_statistics": {
+    "mean": 91.575,
+    "median": 91.75,
+    "min": 85.5,
+    "max": 98.75
+  }
+}
