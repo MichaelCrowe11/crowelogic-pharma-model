@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this dataset, please cite it as below."
+type: dataset
+title: "CroweLogic Pharmaceutical AI Training Dataset"
+version: 1.0.0
+date-released: 2025-11-12
+url: "https://github.com/MichaelCrowe11/crowelogic-pharma-model"
+repository-code: "https://github.com/MichaelCrowe11/crowelogic-pharma-model"
+license: "LicenseRef-CroweLogic-Proprietary"
+authors:
+  - family-names: "Crowe"
+    given-names: "Michael"
+    orcid: "https://orcid.org/0009-0008-5676-8816"
+keywords:
+  - pharmaceutical
+  - drug discovery
+  - machine learning
+  - natural language processing
+  - instruction tuning
+  - ADME
+  - medicinal chemistry
+  - cheminformatics
+abstract: >-
+  The CroweLogic Pharmaceutical AI Training Dataset is a comprehensive
+  collection of 10 million instruction-response pairs covering pharmaceutical
+  and medicinal chemistry domains. The dataset includes molecular properties,
+  drug-likeness assessment, pharmacokinetics (ADME), clinical applications,
+  and drug discovery topics. All examples are professionally curated,
+  quality-scored, and cryptographically watermarked for IP protection.
