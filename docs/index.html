@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CroweLogic Pharmaceutical AI Training Datasets</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .tagline {
+            font-size: 1.3em;
+            opacity: 0.95;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin: 5px;
+            font-size: 0.9em;
+        }
+
+        .content {
+            padding: 60px 40px;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .pricing {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .pricing-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background: white;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .pricing-card.featured {
+            border-color: #667eea;
+            border-width: 3px;
+            position: relative;
+        }
+
+        .pricing-card.featured::before {
+            content: "MOST POPULAR";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #667eea;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 50px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .tier-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .price {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .price-period {
+            font-size: 0.5em;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .features {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .features li:before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-top: 20px;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .feature-item {
+            padding: 25px;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+
+        .feature-item h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        h2 {
+            font-size: 2em;
+            margin: 40px 0 20px 0;
+            color: #333;
+        }
+
+        footer {
+            background: #2d3748;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .contact-info {
+            margin: 20px 0;
+        }
+
+        .contact-info a {
+            color: #667eea;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CroweLogic</h1>
+            <div class="tagline">Pharmaceutical AI Training Datasets</div>
+            <div>
+                <span class="badge">10M Examples</span>
+                <span class="badge">Quality Certified</span>
+                <span class="badge">IP Protected</span>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="highlight-box">
+                <h2 style="margin-top: 0;">Industry-Leading Pharmaceutical AI Dataset</h2>
+                <p style="font-size: 1.2em;">
+                    The most comprehensive instruction-tuned pharmaceutical training dataset available.
+                    10 million high-quality examples covering molecular properties, drug discovery,
+                    clinical applications, and ADME/Tox analysis.
+                </p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">10M</div>
+                    <div class="stat-label">Training Examples</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1,000+</div>
+                    <div class="stat-label">Unique Compounds</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12+</div>
+                    <div class="stat-label">Domain Areas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2.8GB</div>
+                    <div class="stat-label">Dataset Size</div>
+                </div>
+            </div>
+
+            <h2>What's Included</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h3>Molecular Properties</h3>
+                    <p>LogP, TPSA, molecular weight, Lipinski's Rule of Five, hydrogen bonding, rotatable bonds, and stereochemistry analysis.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Drug Discovery</h3>
+                    <p>Target identification, SAR analysis, lead optimization, binding affinity, scaffold hopping, and mechanism of action.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Clinical Applications</h3>
+                    <p>Therapeutic indications, dosing regimens, administration routes, drug interactions, and adverse event profiles.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>ADME/Toxicology</h3>
+                    <p>Absorption, distribution, metabolism, excretion properties, CYP interactions, and toxicity classification.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Quality Tiers</h3>
+                    <p>Datasets organized into Gold, Silver, and Bronze tiers based on scientific accuracy and training value.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>IP Protected</h3>
+                    <p>Cryptographically watermarked with proprietary compound names for unauthorized use detection.</p>
+                </div>
+            </div>
+
+            <h2>Pricing & Licensing</h2>
+            <div class="pricing">
+                <div class="pricing-card">
+                    <div class="tier-name">Community</div>
+                    <div class="price">FREE</div>
+                    <ul class="features">
+                        <li>100,000 examples</li>
+                        <li>Bronze tier quality</li>
+                        <li>Basic properties only</li>
+                        <li>Non-commercial use</li>
+                        <li>Attribution required</li>
+                    </ul>
+                    <a href="https://github.com/MichaelCrowe11/crowelogic-pharma-model" class="cta-button">Download</a>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="tier-name">Research</div>
+                    <div class="price">$1,000<span class="price-period">/year</span></div>
+                    <ul class="features">
+                        <li>1,000,000 examples</li>
+                        <li>Silver tier quality</li>
+                        <li>All domain areas</li>
+                        <li>Academic use</li>
+                        <li>Citation required</li>
+                        <li>Email support</li>
+                    </ul>
+                    <a href="mailto:michael@crowelogic.com" class="cta-button">Contact Us</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="tier-name">Commercial</div>
+                    <div class="price">$15,000<span class="price-period">/year</span></div>
+                    <ul class="features">
+                        <li>10,000,000 examples</li>
+                        <li>Gold tier quality</li>
+                        <li>All domains included</li>
+                        <li>Commercial rights</li>
+                        <li>API access</li>
+                        <li>Priority support</li>
+                        <li>Quarterly updates</li>
+                    </ul>
+                    <a href="mailto:michael@crowelogic.com" class="cta-button">Get Started</a>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="tier-name">Enterprise</div>
+                    <div class="price">Custom</div>
+                    <ul class="features">
+                        <li>Full dataset access</li>
+                        <li>Custom generation</li>
+                        <li>White-label options</li>
+                        <li>Exclusive domains</li>
+                        <li>Co-development</li>
+                        <li>Dedicated support</li>
+                        <li>SLA guarantees</li>
+                    </ul>
+                    <a href="mailto:michael@crowelogic.com" class="cta-button">Let's Talk</a>
+                </div>
+            </div>
+
+            <h2>Why CroweLogic?</h2>
+            <div class="highlight-box">
+                <ul style="list-style: none; font-size: 1.1em;">
+                    <li style="padding: 10px 0;">✓ <strong>10x Larger</strong> than typical pharmaceutical datasets</li>
+                    <li style="padding: 10px 0;">✓ <strong>Instruction-Tuned</strong> ready for supervised fine-tuning</li>
+                    <li style="padding: 10px 0;">✓ <strong>Quality Assured</strong> with multi-dimensional scoring</li>
+                    <li style="padding: 10px 0;">✓ <strong>IP Protected</strong> with cryptographic watermarking</li>
+                    <li style="padding: 10px 0;">✓ <strong>Production Ready</strong> train/validation/test splits included</li>
+                </ul>
+            </div>
+
+            <h2>Use Cases</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h3>LLM Fine-Tuning</h3>
+                    <p>Train pharmaceutical-specific language models using Mistral, Llama, or GPT architectures.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Drug Discovery Tools</h3>
+                    <p>Build AI-powered property prediction, ADME screening, and lead optimization systems.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Clinical Chatbots</h3>
+                    <p>Deploy medicinal chemistry assistants and patient drug information systems.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Research & Education</h3>
+                    <p>Academic research, algorithm benchmarking, and pharmaceutical education materials.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <h2 style="color: white; margin-top: 0;">Ready to Get Started?</h2>
+            <div class="contact-info">
+                <p>Email: <a href="mailto:michael@crowelogic.com">michael@crowelogic.com</a></p>
+                <p>GitHub: <a href="https://github.com/MichaelCrowe11/crowelogic-pharma-model">github.com/MichaelCrowe11/crowelogic-pharma-model</a></p>
+            </div>
+            <p style="margin-top: 30px; opacity: 0.7;">© 2025 CroweLogic. All rights reserved.</p>
+            <p style="opacity: 0.7;">Pharmaceutical AI, Certified.</p>
+        </footer>
+    </div>
+</body>
+</html>
