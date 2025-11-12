@@ -47,6 +47,7 @@ datasets/*.jsonl
 datasets/*.json
 *.tar.gz
 *.zip
+generated_data/
 
 # Training outputs
 checkpoints/
