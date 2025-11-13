@@ -1,0 +1,60 @@
+# Exclude generated data (too large for Docker image)
+generated_data/
+*.jsonl
+*.log
+*.out
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# AWS/Cloud
+*.pem
+*.key
+
+# Logs and cache
+logs/
+cache/
+nohup.out
+generation_*.out
+
+# Large batch files
+batches/
